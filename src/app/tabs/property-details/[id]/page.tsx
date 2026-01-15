@@ -1,4 +1,5 @@
 import { PropertyDetailsClient } from '@/app/tabs/property-details/[id]/PropertyDetailsClient';
+import { Cart } from '@/components/Cart';
 import { getPropertyDetails } from '@/data-access/getPropertyDetails';
 
 interface PropertyDetailsPageProps {
@@ -11,5 +12,10 @@ export default async function PropertyDetailsPage({
   const { id } = await params;
   const propertyDetails = await getPropertyDetails(id);
 
-  return <PropertyDetailsClient propertyDetails={propertyDetails} />;
+  return (
+    <div>
+      <PropertyDetailsClient propertyDetails={propertyDetails} />
+      <Cart />
+    </div>
+  );
 }
