@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# nextjs property details routing POC
 
-## Getting Started
+## Getting started
 
-First, run the development server:
+1. Install dependencies: `npm i`
+2. Start the mock server `node mockServer.js`
+3. Start the main app in another terminal tab:  
+   a. Dev mode: `npm run dev`  
+   b. Prod mode: `npm run build && npm run start`
+4. Server will be running at `http://localhost:3000`
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Overview
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This POC application has three approaches to sub-page navigation that will be used on mobile. In all examples, a cart is rendered, which makes use of a jotai atom. The cart is currently cleared on page reload, but this can be persisted.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Using React.Context with next routing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+In this example, we will make use of the file based routing that is built into Next.js to handle navigation to sub-pages. To make data fetching simple to share across pages, `React.Context`, `jotai` or `react-query` will be used. In this example, `React.Context` will be used, but we will most likely use `react-query` as that is available in the main repo.
 
-## Learn More
+The `layout.tsx` will fetch property details, and share it with the other pages via a context. The pages - property details, and other sub pages, will get data from a hook. This means that data isn't re-fetched when navigating.
 
-To learn more about Next.js, take a look at the following resources:
+Each sub-page is a standalone next.js page, and fully makes use of the file based router.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Using Server Components with next routing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This is similar to the `React.Context` approach, in which Next.js file base routing is used. The only difference is that each page fetches it's own data, and makes use of the next.js data cache to persist the results across pages. To enable this, a `cacheId` is passed to each sub-page. This allows the cache to be reset on reload. Without the `cacheId`, the cache would persist all the time (or until some expiry time), or it wouldn't persist at all, meaning that each sub-page will re-load.
 
-## Deploy on Vercel
+### Using tabs/conditional rendering with custom routing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This approach doesn't use any Next.js routing features, and instead uses query params to manually manage which "tab" is selected. The actuall implementation is to be decided, but essentially, this approach cwitches out components in the main root component based on what query param is set. Similar to how we do bottom sheets.
