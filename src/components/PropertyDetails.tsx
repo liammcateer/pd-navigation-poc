@@ -31,7 +31,7 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
           return (
             <li key={room.id}>
               <Link
-                href={`./${
+                href={`/property-details/${
                   propertyDetails.id
                 }/room-details?${newSearchParams.toString()}`}
               >
@@ -49,7 +49,9 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
       </ul>
       <Button
         LinkComponent={Link}
-        href={`./${propertyDetails.id}/reviews?${searchParams.toString()}`}
+        href={`/property-details/${
+          propertyDetails.id
+        }/reviews?${searchParams.toString()}`}
       >
         Reviews
       </Button>
