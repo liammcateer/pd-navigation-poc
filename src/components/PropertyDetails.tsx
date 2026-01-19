@@ -1,7 +1,6 @@
 'use client';
 import type { PropertyDetails as PropertyDetailsType } from '@/data-access/property-details/getPropertyDetails';
 import { Button } from '@mui/material';
-import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 export interface PropertyDetailsProps {
@@ -30,13 +29,17 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
           newSearchParams.set('roomId', room.id);
           return (
             <li key={room.id}>
-              <Link
-                href={`./${
-                  propertyDetails.id
-                }/room-details?${newSearchParams.toString()}`}
+              <Button
+                onClick={() =>
+                  window.history.pushState(
+                    {},
+                    '',
+                    getRoomLink(searchParams, room.id)
+                  )
+                }
               >
-                {room.name}
-              </Link>
+                {room.name} - ${room.price}
+              </Button>
             </li>
           );
         })}
@@ -48,11 +51,24 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
         ))}
       </ul>
       <Button
-        LinkComponent={Link}
-        href={`./${propertyDetails.id}/reviews?${searchParams.toString()}`}
+        onClick={() =>
+          window.history.pushState({}, '', getReviewsLink(searchParams))
+        }
       >
         Reviews
       </Button>
     </div>
   );
+};
+
+const getReviewsLink = (searchParams: URLSearchParams) => {
+  const newSearchParams = new URLSearchParams(searchParams);
+  newSearchParams.set('reviews', 'true');
+  return `?${newSearchParams.toString()}`;
+};
+
+const getRoomLink = (searchParams: URLSearchParams, roomId: string) => {
+  const newSearchParams = new URLSearchParams(searchParams);
+  newSearchParams.set('roomId', roomId);
+  return `?${newSearchParams.toString()}`;
 };

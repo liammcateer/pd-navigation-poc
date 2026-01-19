@@ -1,18 +1,19 @@
-'use client';
 import { PropertyDetails } from '@/components/PropertyDetails';
-import { usePropertyDetails } from '@/data-access/property-details/react-query';
-import { useParams, useSearchParams } from 'next/navigation';
+import { getPropertyDetails } from '@/data-access/property-details/getPropertyDetails';
 
-export default function PropertyDetailsPage() {
-  const { id } = useParams<{ id: string }>();
-  const { data: propertyDetails } = usePropertyDetails(id);
-  const searchParams = useSearchParams();
-  const checkIn = searchParams.get('checkIn') ?? undefined;
-  const checkOut = searchParams.get('checkOut') ?? undefined;
+interface PropertyDetailsPageProps {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ checkIn?: string; checkOut?: string }>;
+}
 
-  if (!propertyDetails) {
-    return <div>Loading...</div>;
-  }
+export default async function PropertyDetailsPage({
+  params,
+  searchParams,
+}: PropertyDetailsPageProps) {
+  const { id } = await params;
+  const { checkIn, checkOut } = await searchParams;
+
+  const propertyDetails = await getPropertyDetails(id);
 
   return (
     <PropertyDetails
