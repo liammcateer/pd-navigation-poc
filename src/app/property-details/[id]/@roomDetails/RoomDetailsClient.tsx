@@ -2,7 +2,7 @@
 import { RoomDetails } from '@/components/RoomDetails';
 import { SubPageDrawer } from '@/components/SubPageDrawer';
 import type { Room } from '@/data-access/property-details/getPropertyDetails';
-import { useSearchParams } from 'next/navigation';
+import { usePropertyDetailsRoutes } from '@/data-access/routes';
 
 interface RoomDetailsProps {
   rooms: Room[];
@@ -13,13 +13,20 @@ export const RoomDetailsClient: React.FC<RoomDetailsProps> = ({
   propertyName,
   rooms,
 }) => {
-  const searchParams = useSearchParams();
-  const roomId = searchParams.get('roomId');
+  const { route } = usePropertyDetailsRoutes();
 
-  const room = rooms.find((room) => room.id === roomId);
+  const isRoomDetailsRoute = route?.name === 'roomDetails';
+
+  const room = isRoomDetailsRoute
+    ? rooms.find((room) => room.id === route?.params?.roomId)
+    : undefined;
 
   return (
-    <SubPageDrawer title={propertyName} subtitle={room?.name} open={!!roomId}>
+    <SubPageDrawer
+      title={propertyName}
+      subtitle={room?.name}
+      open={isRoomDetailsRoute}
+    >
       {room ? <RoomDetails room={room} /> : 'Room not found'}
     </SubPageDrawer>
   );

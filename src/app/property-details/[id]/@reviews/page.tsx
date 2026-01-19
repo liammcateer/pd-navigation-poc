@@ -1,15 +1,15 @@
 'use client';
 import { SubPageDrawer } from '@/components/SubPageDrawer';
-import { useSearchParams } from 'next/navigation';
+import { usePropertyDetailsRoutes } from '@/data-access/routes';
 
 export default function ReviewsPage() {
-  const searchParams = useSearchParams();
+  const { route } = usePropertyDetailsRoutes();
 
   return (
     <SubPageDrawer
       title="Reviews"
       subtitle="User reviews for this property"
-      open={searchParams.get('reviews') === 'true'}
+      open={route?.name === 'reviews'}
     >
       review content
     </SubPageDrawer>

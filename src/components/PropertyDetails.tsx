@@ -1,7 +1,7 @@
 'use client';
 import type { PropertyDetails as PropertyDetailsType } from '@/data-access/property-details/getPropertyDetails';
+import { usePropertyDetailsRoutes } from '@/data-access/routes';
 import { Button } from '@mui/material';
-import { useSearchParams } from 'next/navigation';
 
 export interface PropertyDetailsProps {
   propertyDetails: PropertyDetailsType;
@@ -14,8 +14,8 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   checkIn,
   checkOut,
 }) => {
-  const searchParams = useSearchParams();
   const { name, location, rooms, facilities } = propertyDetails;
+  const { changeRoute } = usePropertyDetailsRoutes();
 
   return (
     <div>
@@ -24,25 +24,20 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
       Dates: {checkIn} - {checkOut}
       <h2>Rooms:</h2>
       <ul>
-        {rooms.map((room) => {
-          const newSearchParams = new URLSearchParams(searchParams);
-          newSearchParams.set('roomId', room.id);
-          return (
-            <li key={room.id}>
-              <Button
-                onClick={() =>
-                  window.history.pushState(
-                    {},
-                    '',
-                    getRoomLink(searchParams, room.id)
-                  )
-                }
-              >
-                {room.name} - ${room.price}
-              </Button>
-            </li>
-          );
-        })}
+        {rooms.map((room) => (
+          <li key={room.id}>
+            <Button
+              onClick={() =>
+                changeRoute({
+                  name: 'roomDetails',
+                  params: { roomId: room.id },
+                })
+              }
+            >
+              {room.name} - ${room.price}
+            </Button>
+          </li>
+        ))}
       </ul>
       <h2>Facilities:</h2>
       <ul>
@@ -50,25 +45,7 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
           <li key={facility}>{facility}</li>
         ))}
       </ul>
-      <Button
-        onClick={() =>
-          window.history.pushState({}, '', getReviewsLink(searchParams))
-        }
-      >
-        Reviews
-      </Button>
+      <Button onClick={() => changeRoute({ name: 'reviews' })}>Reviews</Button>
     </div>
   );
-};
-
-const getReviewsLink = (searchParams: URLSearchParams) => {
-  const newSearchParams = new URLSearchParams(searchParams);
-  newSearchParams.set('reviews', 'true');
-  return `?${newSearchParams.toString()}`;
-};
-
-const getRoomLink = (searchParams: URLSearchParams, roomId: string) => {
-  const newSearchParams = new URLSearchParams(searchParams);
-  newSearchParams.set('roomId', roomId);
-  return `?${newSearchParams.toString()}`;
 };
