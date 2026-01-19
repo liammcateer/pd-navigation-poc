@@ -1,6 +1,9 @@
 'use client';
+import { BottomSheet } from '@/components/BottomSheet';
 import { useCart } from '@/data-access/cartAtom';
-import type { Room } from '@/data-access/getPropertyDetails';
+import type { Room } from '@/data-access/property-details/getPropertyDetails';
+import Button from '@mui/material/Button';
+import { useState } from 'react';
 
 export interface RoomDetailsProps {
   room: Room;
@@ -8,6 +11,7 @@ export interface RoomDetailsProps {
 
 export const RoomDetails: React.FC<RoomDetailsProps> = ({ room }) => {
   const { addRoom, removeRoom, cart } = useCart();
+  const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
   const inCart = cart.some(({ id }) => id === room.id);
 
   return (
@@ -26,6 +30,21 @@ export const RoomDetails: React.FC<RoomDetailsProps> = ({ room }) => {
           <li key={facility}>{facility}</li>
         ))}
       </ul>
+      <Button onClick={() => setBottomSheetOpen(true)}>View disclaimer</Button>
+      <BottomSheet
+        onClose={() => setBottomSheetOpen(false)}
+        open={bottomSheetOpen}
+      >
+        <div style={{ padding: '16px' }}>
+          <h2>Disclaimer</h2>
+          <p>
+            The room details provided are for informational purposes only and
+            are subject to change without notice. Availability and pricing may
+            vary based on demand and other factors. Please confirm all details
+            with the property before booking.
+          </p>
+        </div>
+      </BottomSheet>
     </div>
   );
 };

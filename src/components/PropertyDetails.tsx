@@ -1,49 +1,42 @@
-import type { PropertyDetails as PropertyDetailsType } from '@/data-access/getPropertyDetails';
+'use client';
+import type { PropertyDetails as PropertyDetailsType } from '@/data-access/property-details/getPropertyDetails';
+import { Button } from '@mui/material';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 export interface PropertyDetailsProps {
   propertyDetails: PropertyDetailsType;
-  cacheId?: string;
-  inTabs?: boolean;
+  checkIn?: string;
+  checkOut?: string;
 }
 
 export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   propertyDetails,
-  cacheId,
-  inTabs,
+  checkIn,
+  checkOut,
 }) => {
+  const searchParams = useSearchParams();
   const { name, location, rooms, facilities } = propertyDetails;
 
   return (
     <div>
       <h1>{name}</h1>
       <p>Location: {location}</p>
+      Dates: {checkIn} - {checkOut}
       <h2>Rooms:</h2>
       <ul>
         {rooms.map((room) => {
+          const newSearchParams = new URLSearchParams(searchParams);
+          newSearchParams.set('roomId', room.id);
           return (
             <li key={room.id}>
-              {inTabs ? (
-                <button
-                  onClick={() =>
-                    window.history.pushState(
-                      undefined,
-                      '',
-                      `?tab=room-details&selectedRoom=${room.id}`
-                    )
-                  }
-                >
-                  {room.name}
-                </button>
-              ) : (
-                <Link
-                  href={`./${propertyDetails.id}/room-details/${room.id}${
-                    cacheId ? `?cacheId=${cacheId}` : ''
-                  }`}
-                >
-                  {room.name}
-                </Link>
-              )}
+              <Link
+                href={`./${
+                  propertyDetails.id
+                }/room-details?${newSearchParams.toString()}`}
+              >
+                {room.name}
+              </Link>
             </li>
           );
         })}
@@ -54,6 +47,12 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
           <li key={facility}>{facility}</li>
         ))}
       </ul>
+      <Button
+        LinkComponent={Link}
+        href={`./${propertyDetails.id}/reviews?${searchParams.toString()}`}
+      >
+        Reviews
+      </Button>
     </div>
   );
 };
