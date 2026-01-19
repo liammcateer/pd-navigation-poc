@@ -1,7 +1,12 @@
 'use client';
-import type { PropertyDetails as PropertyDetailsType } from '@/data-access/property-details/getPropertyDetails';
-import { usePropertyDetailsRoutes } from '@/data-access/routes';
+import { RoomDetails } from '@/components/RoomDetails';
+import { SubPageDrawer } from '@/components/SubPageDrawer';
+import type {
+  PropertyDetails as PropertyDetailsType,
+  Room,
+} from '@/data-access/property-details/getPropertyDetails';
 import { Button } from '@mui/material';
+import { useState } from 'react';
 
 export interface PropertyDetailsProps {
   propertyDetails: PropertyDetailsType;
@@ -15,7 +20,8 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   checkOut,
 }) => {
   const { name, location, rooms, facilities } = propertyDetails;
-  const { changeRoute } = usePropertyDetailsRoutes();
+  const [selectedRoom, setSelectedRoom] = useState<Room>();
+  const [reviewsOpen, setReviewsOpen] = useState(false);
 
   return (
     <div>
@@ -26,14 +32,7 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
       <ul>
         {rooms.map((room) => (
           <li key={room.id}>
-            <Button
-              onClick={() =>
-                changeRoute({
-                  name: 'roomDetails',
-                  params: { roomId: room.id },
-                })
-              }
-            >
+            <Button onClick={() => setSelectedRoom(room)}>
               {room.name} - ${room.price}
             </Button>
           </li>
@@ -45,7 +44,23 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
           <li key={facility}>{facility}</li>
         ))}
       </ul>
-      <Button onClick={() => changeRoute({ name: 'reviews' })}>Reviews</Button>
+      <Button onClick={() => setReviewsOpen(true)}>Reviews</Button>
+      <SubPageDrawer
+        title="Reviews"
+        subtitle="User reviews for this property"
+        open={reviewsOpen}
+        onClose={() => setReviewsOpen(false)}
+      >
+        review content
+      </SubPageDrawer>
+      <SubPageDrawer
+        title={name}
+        subtitle={selectedRoom?.name}
+        open={!!selectedRoom}
+        onClose={() => setSelectedRoom(undefined)}
+      >
+        {selectedRoom && <RoomDetails room={selectedRoom} />}
+      </SubPageDrawer>
     </div>
   );
 };

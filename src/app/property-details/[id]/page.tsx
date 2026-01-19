@@ -1,3 +1,4 @@
+import { Cart } from '@/components/Cart';
 import { PropertyDetails } from '@/components/PropertyDetails';
 import { getPropertyDetails } from '@/data-access/property-details/getPropertyDetails';
 
@@ -16,10 +17,13 @@ export default async function PropertyDetailsPage({
   const propertyDetails = await getPropertyDetails(id);
 
   return (
-    <PropertyDetails
-      propertyDetails={propertyDetails}
-      checkIn={checkIn}
-      checkOut={checkOut}
-    />
+    <>
+      <PropertyDetails
+        propertyDetails={propertyDetails}
+        checkIn={checkIn}
+        checkOut={checkOut}
+      />
+      <Cart />
+    </>
   );
 }
