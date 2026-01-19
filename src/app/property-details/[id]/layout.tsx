@@ -9,13 +9,11 @@ import {
 
 interface PropertyDetailsPageProps {
   children: React.ReactNode;
-  subPage: React.ReactNode;
   params: Promise<{ id: string }>;
 }
 
 export default async function PropertyDetailsPage({
   children,
-  subPage,
   params,
 }: PropertyDetailsPageProps) {
   const queryClient = new QueryClient();
@@ -26,7 +24,6 @@ export default async function PropertyDetailsPage({
     <QueryClientProvider>
       <HydrationBoundary state={dehydrate(queryClient)}>
         {children}
-        {subPage}
         <Cart />
       </HydrationBoundary>
     </QueryClientProvider>

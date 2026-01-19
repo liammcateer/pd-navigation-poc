@@ -25,21 +25,17 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
       Dates: {checkIn} - {checkOut}
       <h2>Rooms:</h2>
       <ul>
-        {rooms.map((room) => {
-          const newSearchParams = new URLSearchParams(searchParams);
-          newSearchParams.set('roomId', room.id);
-          return (
-            <li key={room.id}>
-              <Link
-                href={`./${
-                  propertyDetails.id
-                }/room-details?${newSearchParams.toString()}`}
-              >
-                {room.name}
-              </Link>
-            </li>
-          );
-        })}
+        {rooms.map((room) => (
+          <li key={room.id}>
+            <Link
+              href={`./${propertyDetails.id}/room-details/${
+                room.id
+              }?${searchParams.toString()}`}
+            >
+              {room.name}
+            </Link>
+          </li>
+        ))}
       </ul>
       <h2>Facilities:</h2>
       <ul>

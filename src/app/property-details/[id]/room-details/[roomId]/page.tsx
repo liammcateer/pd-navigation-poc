@@ -2,12 +2,10 @@
 import { RoomDetails } from '@/components/RoomDetails';
 import { SubPageDrawer } from '@/components/SubPageDrawer';
 import { usePropertyDetails } from '@/data-access/property-details/react-query';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 export default function RoomDetailsPage() {
-  const { id } = useParams<{ id: string }>();
-  const searchParams = useSearchParams();
-  const roomId = searchParams.get('roomId');
+  const { id, roomId } = useParams<{ id: string; roomId: string }>();
 
   const { data: propertyDetails } = usePropertyDetails(id);
 
