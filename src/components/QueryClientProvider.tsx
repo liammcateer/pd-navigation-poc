@@ -9,7 +9,17 @@ import { useState, type PropsWithChildren } from 'react';
 export const QueryClientProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,
+          },
+        },
+      })
+  );
 
   return <Provider client={queryClient}>{children}</Provider>;
 };
