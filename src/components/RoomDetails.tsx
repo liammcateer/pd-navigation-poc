@@ -1,37 +1,23 @@
 'use client';
 import { BottomSheet } from '@/components/BottomSheet';
 import { Cart } from '@/components/Cart';
-import { SubPageHeader } from '@/components/SubPageHeader';
 import { useCart } from '@/data-access/cartAtom';
 import type { Room } from '@/data-access/getPropertyDetails';
 import Button from '@mui/material/Button';
-import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export interface RoomDetailsProps {
-  rooms: Room[];
-  propertyName: string;
+  room: Room;
 }
 
-export const RoomDetails: React.FC<RoomDetailsProps> = ({
-  rooms,
-  propertyName,
-}) => {
-  const searchParams = useSearchParams();
-  const roomId = searchParams.get('roomId');
+export const RoomDetails: React.FC<RoomDetailsProps> = ({ room }) => {
   const { addRoom, removeRoom, cart } = useCart();
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
-  const room = rooms.find((r) => r.id === roomId);
-
-  if (!room) {
-    return <div>Room not found</div>;
-  }
 
   const inCart = cart.some(({ id }) => id === room.id);
 
   return (
     <div>
-      <SubPageHeader title={propertyName} subtitle={room.name} />
       <h1>{room.name}</h1>
       <p>Size: {room.size}</p>
       <p>Price: ${room.price}</p>

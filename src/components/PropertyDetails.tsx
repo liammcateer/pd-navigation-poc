@@ -45,7 +45,7 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
 
 const changeTab = (tab: string, params?: Record<string, string>) => {
   const searchParams = new URLSearchParams(window.location.search);
-  searchParams.set('tab', tab);
+  searchParams.set('subPage', tab);
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
       searchParams.set(key, value);

@@ -12,9 +12,9 @@ export const SubPageHeader: React.FC<SubPageHeaderProps> = ({
     if (window.history.state.fromPropertyDetails) {
       window.history.back();
     } else {
-      // If there's no history to go back to, just remove the tab parameter
+      // If there's no history to go back to, just remove the subPage parameter
       const searchParams = new URLSearchParams(window.location.search);
-      searchParams.delete('tab');
+      searchParams.delete('subPage');
       window.history.replaceState({}, '', `?${searchParams.toString()}`);
     }
   };

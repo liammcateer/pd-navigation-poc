@@ -1,4 +1,5 @@
 'use client';
+import { MODE } from '@/app/mode';
 import { useSearchParams } from 'next/navigation';
 
 interface LayoutProps {
@@ -13,13 +14,22 @@ export default function Layout({
   roomDetails,
 }: LayoutProps) {
   const searchParams = useSearchParams();
-  const tab = searchParams.get('tab');
+  if (MODE === 'drawer') {
+    return (
+      <>
+        {children}
+        {reviews}
+        {roomDetails}
+      </>
+    );
+  }
+  const subPage = searchParams.get('subPage');
 
-  if (tab === 'reviews') {
+  if (subPage === 'reviews') {
     return reviews;
   }
 
-  if (tab === 'roomDetails') {
+  if (subPage === 'roomDetails') {
     return roomDetails;
   }
 
