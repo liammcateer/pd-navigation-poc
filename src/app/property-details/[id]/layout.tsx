@@ -1,22 +1,27 @@
-import { Cart } from '@/components/Cart';
+'use client';
+import { useSearchParams } from 'next/navigation';
 
-interface PropertyDetailsPageProps {
+interface LayoutProps {
   children: React.ReactNode;
   reviews: React.ReactNode;
   roomDetails: React.ReactNode;
 }
 
-export default async function PropertyDetailsPage({
+export default function Layout({
   children,
   reviews,
   roomDetails,
-}: PropertyDetailsPageProps) {
-  return (
-    <>
-      {children}
-      {reviews}
-      {roomDetails}
-      <Cart />
-    </>
-  );
+}: LayoutProps) {
+  const searchParams = useSearchParams();
+  const tab = searchParams.get('tab');
+
+  if (tab === 'reviews') {
+    return reviews;
+  }
+
+  if (tab === 'roomDetails') {
+    return roomDetails;
+  }
+
+  return children;
 }

@@ -1,6 +1,6 @@
 'use client';
-import type { PropertyDetails as PropertyDetailsType } from '@/data-access/property-details/getPropertyDetails';
-import { usePropertyDetailsRoutes } from '@/data-access/routes';
+import { Cart } from '@/components/Cart';
+import type { PropertyDetails as PropertyDetailsType } from '@/data-access/getPropertyDetails';
 import { Button } from '@mui/material';
 
 export interface PropertyDetailsProps {
@@ -15,7 +15,6 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
   checkOut,
 }) => {
   const { name, location, rooms, facilities } = propertyDetails;
-  const { changeRoute } = usePropertyDetailsRoutes();
 
   return (
     <div>
@@ -26,14 +25,7 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
       <ul>
         {rooms.map((room) => (
           <li key={room.id}>
-            <Button
-              onClick={() =>
-                changeRoute({
-                  name: 'roomDetails',
-                  params: { roomId: room.id },
-                })
-              }
-            >
+            <Button onClick={() => openRoomDetailsTab(room.id)}>
               {room.name} - ${room.price}
             </Button>
           </li>
@@ -45,7 +37,28 @@ export const PropertyDetails: React.FC<PropertyDetailsProps> = ({
           <li key={facility}>{facility}</li>
         ))}
       </ul>
-      <Button onClick={() => changeRoute({ name: 'reviews' })}>Reviews</Button>
+      <Button onClick={() => openReviewsTab()}>Reviews</Button>
+      <Cart />
     </div>
   );
 };
+
+const changeTab = (tab: string, params?: Record<string, string>) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  searchParams.set('tab', tab);
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      searchParams.set(key, value);
+    });
+  }
+  window.history.pushState(
+    { fromPropertyDetails: true },
+    '',
+    `?${searchParams.toString()}`,
+  );
+};
+
+const openReviewsTab = () => changeTab('reviews');
+
+const openRoomDetailsTab = (roomId: string) =>
+  changeTab('roomDetails', { roomId });

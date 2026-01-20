@@ -1,5 +1,5 @@
 'use client';
-import type { Room } from '@/data-access/property-details/getPropertyDetails';
+import type { Room } from '@/data-access/getPropertyDetails';
 import { atom, useAtom } from 'jotai';
 
 const cartAtom = atom<Room[]>([]);

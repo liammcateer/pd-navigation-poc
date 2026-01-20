@@ -1,17 +1,15 @@
-'use client';
-import { SubPageDrawer } from '@/components/SubPageDrawer';
-import { usePropertyDetailsRoutes } from '@/data-access/routes';
+import {
+  getPropertyDetailsForPage,
+  type PropertyDetailsPageProps,
+} from '@/app/property-details/[id]/pageUtils';
+import { SubPageHeader } from '@/components/SubPageHeader';
 
-export default function ReviewsPage() {
-  const { route } = usePropertyDetailsRoutes();
-
+export default async function ReviewsPage(props: PropertyDetailsPageProps) {
+  const { propertyDetails } = await getPropertyDetailsForPage(props);
   return (
-    <SubPageDrawer
-      title="Reviews"
-      subtitle="User reviews for this property"
-      open={route?.name === 'reviews'}
-    >
-      review content
-    </SubPageDrawer>
+    <div>
+      <SubPageHeader title={propertyDetails.name} subtitle="Reviews" />
+      Reviews
+    </div>
   );
 }

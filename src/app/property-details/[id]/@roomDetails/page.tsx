@@ -1,19 +1,14 @@
-import { RoomDetailsClient } from '@/app/property-details/[id]/@roomDetails/RoomDetailsClient';
-import { getPropertyDetails } from '@/data-access/property-details/getPropertyDetails';
+import {
+  getPropertyDetailsForPage,
+  type PropertyDetailsPageProps,
+} from '@/app/property-details/[id]/pageUtils';
+import { RoomDetails } from '@/components/RoomDetails';
 
-interface RoomDetailsPageProps {
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{ roomId?: string }>;
-}
-
-export default async function RoomDetailsPage({
-  params,
-}: RoomDetailsPageProps) {
-  const { id } = await params;
-  const propertyDetails = await getPropertyDetails(id);
+export default async function RoomDetailsPage(props: PropertyDetailsPageProps) {
+  const { propertyDetails } = await getPropertyDetailsForPage(props);
 
   return (
-    <RoomDetailsClient
+    <RoomDetails
       rooms={propertyDetails.rooms}
       propertyName={propertyDetails.name}
     />

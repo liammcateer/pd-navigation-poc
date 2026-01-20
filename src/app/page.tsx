@@ -6,7 +6,9 @@ export default function HomePage() {
     <div>
       <h1>Property details routing POC</h1>
 
-      <Link href="/property-details/1">Using react-query</Link>
+      <Link href="/property-details/1?checkIn=2026-02-01&checkOut=2026-02-10">
+        Property details using tabs
+      </Link>
     </div>
   );
 }
